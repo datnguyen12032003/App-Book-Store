@@ -110,7 +110,7 @@ router
     "/login",
     cors.corsWithOptions,
     passport.authenticate("local"),
-    (req, res) => {
+   async (req, res) => {
       var token = authenticate.getToken({ _id: req.user._id });
       res.statusCode = 200;
       res.setHeader("Content-Type", "application/json");
@@ -119,7 +119,9 @@ router
       //   token: token,
       //   status: "You are successfully logged in!",
       // });
-      res.end(token);
+      const user = await User.findById(req.user._id);
+      console.log(user);
+      res.json({token: token, role:  user.admin ? "admin" : "user"});
     }
   );
 

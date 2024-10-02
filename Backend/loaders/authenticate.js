@@ -1,46 +1,55 @@
 var passport = require("passport");
 var LocalStrategy = require("passport-local").Strategy;
 var User = require("../models/user");
-var JwtStratergy = require("passport-jwt").Strategy; //dùng để xác thực jwt
-var ExtractJwt = require("passport-jwt").ExtractJwt; //dùng để trích xuất jwt từ request
-var jwt = require("jsonwebtoken"); //dùng để tạo, xác thực token
+var JwtStrategy = require("passport-jwt").Strategy; // Đảm bảo tên biến đúng
+var ExtractJwt = require("passport-jwt").ExtractJwt; // Dùng để trích xuất jwt từ request
+var jwt = require("jsonwebtoken"); // Dùng để tạo, xác thực token
 
 var config = require("../configs/config");
-passport.use(new LocalStrategy(User.authenticate())); //tác dụng: xác thực user, password, và gọi hàm authenticate() từ passport-local-mongoose
-passport.serializeUser(User.serializeUser()); //tác dụng: mã hóa user
-passport.deserializeUser(User.deserializeUser()); //tác dụng: giải mã user
+require("dotenv").config(); // Load biến môi trường từ file .env
 
+// Xác thực Local
+passport.use(new LocalStrategy(User.authenticate())); // Tác dụng: xác thực user, password
+passport.serializeUser(User.serializeUser()); // Tác dụng: mã hóa user
+passport.deserializeUser(User.deserializeUser()); // Tác dụng: giải mã user
+
+// Tạo token
 exports.getToken = function (user) {
-  return jwt.sign(user, config.secretKey, { expiresIn: 86400 }); //tạo token
+  console.log("Creating token for user: ", user); // Log thông tin người dùng
+  return jwt.sign(user, config.secretKey, { expiresIn: 86400 }); // Tạo token
 };
 
-var opts = {}; // options
-opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken(); //trích xuất jwt từ request
-opts.secretOrKey = config.secretKey; //secret key
+// Cấu hình JWT
+var opts = {}; // Options
+opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken(); // Trích xuất jwt từ request
+opts.secretOrKey = config.secretKey; // Secret key
+console.log("JWT Secret Key:", opts.secretOrKey); // Thêm dòng này để kiểm tra
 
+// Sử dụng JWT
 exports.jwtPassport = passport.use(
-  //sử dụng jwt
-  new JwtStratergy(opts, async (jwt_payload, done) => {
-    //jwt_payload: thông tin được mã hóa trong token
-    console.log("JWT Payload: ", jwt_payload);
+  new JwtStrategy(opts, async (jwt_payload, done) => {
+    console.log("JWT Payload: ", jwt_payload); // Log payload JWT
 
     try {
-      const user = await User.findOne({ _id: jwt_payload._id }); //tìm user trong database
+      const user = await User.findOne({ _id: jwt_payload._id }); // Tìm user trong database
       if (user) {
-        //nếu tìm thấy user
-        return done(null, user);
+        console.log("User found: ", user); // Log thông tin user
+        return done(null, user); // Nếu tìm thấy user
       } else {
-        //nếu không tìm thấy user
-        return done(null, false);
+        console.log("User not found"); // Log nếu không tìm thấy user
+        return done(null, false); // Nếu không tìm thấy user
       }
     } catch (err) {
+      console.error("Error fetching user: ", err); // Log lỗi nếu có
       return done(err, false);
     }
   })
 );
 
-exports.verifyUser = passport.authenticate("jwt", { session: false }); //xác thực user
+// Xác thực user
+exports.verifyUser = passport.authenticate("jwt", { session: false }); // Xác thực user
 
+// Xác thực admin
 exports.verifyAdmin = (req, res, next) => {
   if (req.user.admin) {
     return next();
@@ -51,32 +60,38 @@ exports.verifyAdmin = (req, res, next) => {
   }
 };
 
-var googleStrategy = require("passport-google-oauth2").Strategy;
+// Google OAuth Strategy
+var GoogleStrategy = require("passport-google-oauth2").Strategy;
 
 exports.googlePassport = passport.use(
-  new googleStrategy(
+  new GoogleStrategy(
     {
       clientID: config.web.client_id,
       clientSecret: config.web.client_secret,
       callbackURL: config.web.redirect_uris,
       passReqToCallback: true,
     },
-    (request, accesstoken, refreshToken, profile, done) => {
+    (request, accessToken, refreshToken, profile, done) => {
+      console.log("Google Profile: ", profile); // Log thông tin profile Google
       User.findOne({ googleId: profile.id })
         .then((user) => {
           if (user) {
+            console.log("Google user found: ", user); // Log nếu tìm thấy user
             return done(null, user);
           } else {
+            // Nếu không tìm thấy user, tạo mới
             user = new User({ username: profile.displayName });
             user.googleId = profile.id;
             user.fullname = profile.displayName;
             user.email = profile.emails[0].value;
             user.save().then((user) => {
+              console.log("New Google user created: ", user); // Log thông tin user mới
               return done(null, user);
             });
           }
         })
         .catch((err) => {
+          console.error("Error fetching Google user: ", err); // Log lỗi nếu có
           return done(err, false);
         });
     }
