@@ -1,6 +1,7 @@
-require("dotenv").config();
-
-module.exports = {
+  require("dotenv").config();
+  console.log("Current Directory:", process.cwd()); // Hiển thị thư mục hiện tại
+  console.log("Secret Key:", process.env.SECRET_KEY); // Kiểm tra giá trị của SECRET_KEY
+module.exports = {  
   secretKey: process.env.SECRET_KEY,
   url: process.env.DATABASE_URL,
   // VNPay

@@ -1,3 +1,5 @@
+require("dotenv").config(); // Load biến môi trường từ file .env
+
 var createError = require("http-errors");
 var express = require("express");
 var path = require("path");

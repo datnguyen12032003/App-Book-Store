@@ -2,20 +2,26 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 
-//whitelist: danh sach cac domain co the truy cap server
+//whitelist: danh sách các domain có thể truy cập server
 const whitelist = [
+  
   "http://localhost:3001",
   "https://localhost:3443",
   "http://localhost:3000",
+ 
+  
 ];
-//corsOptionsDelegate: ham kiem tra xem origin co trong whitelist khong
+
+//corsOptionsDelegate: hàm kiểm tra xem origin có trong whitelist không
 var corsOptionsDelegate = (req, callback) => {
   var corsOptions;
-  if (whitelist.indexOf(req.header("Origin")) !== -1) {
-    //neu origin co trong whitelist
-    corsOptions = { origin: true }; //cho phep truy cap
+  const origin = req.header("Origin");
+
+  if (origin && whitelist.indexOf(origin) !== -1) {
+    // nếu origin có trong whitelist
+    corsOptions = { origin: true }; // cho phép truy cập
   } else {
-    corsOptions = { origin: false }; //khong cho phep truy cap
+    corsOptions = { origin: false }; // không cho phép truy cập
   }
   callback(null, corsOptions);
 };
