@@ -4,7 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Toast from "react-native-toast-message";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import Home from "./Components/HomeFage/Home";
 import Login from "./Components/Login/Login";
 import SignUp from "./Components/SignUp/SignUp";
@@ -26,12 +26,12 @@ const TabNavigator = () => {
           let iconName;
 
           if (route.name === "Home") {
-            iconName = focused ? "home" : "home-filled";
+            iconName = focused ? "home" : "home-outline";
           } else if (route.name === "Profile") {
             iconName = focused ? "person" : "person-outline";
           }
 
-          return <MaterialIcons name={iconName} size={size} color={color} />;
+          return <Ionicons name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: "#FF8C00",
         tabBarInactiveTintColor: "gray",
