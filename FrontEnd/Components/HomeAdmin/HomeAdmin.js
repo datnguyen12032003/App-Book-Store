@@ -48,27 +48,22 @@ const HomeAdmin = () => {
         {/* Các nút chức năng */}
         <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('UserManagement')}>
           <Ionicons name="people" size={32} color="#000" />
-          <Text style={styles.cardText}>User Management</Text>
+          <Text style={styles.cardText}>Quản lý người dùng</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('BookListAdmin')}>
+        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('ProductManagement')}>
           <Ionicons name="cube" size={32} color="#000" />
-          <Text style={styles.cardText}>Book Management</Text>
+          <Text style={styles.cardText}>Quản lý sản phẩm</Text>
         </TouchableOpacity>
-
-        {/* <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('CreateBookScreen')}>
-          <Ionicons name="create" size={32} color="#000" />
-          <Text style={styles.cardText}>Thêm Sản Phẩm</Text>
-        </TouchableOpacity> */}
 
         <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('OrderManagement')}>
           <Ionicons name="receipt" size={32} color="#000" />
-          <Text style={styles.cardText}>Order management</Text>
+          <Text style={styles.cardText}>Quản lý đơn hàng</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('Analytics')}>
           <Ionicons name="bar-chart" size={32} color="#000" />
-          <Text style={styles.cardText}>Statistics</Text>
+          <Text style={styles.cardText}>Phân tích</Text>
         </TouchableOpacity>
 
         {/* Thay Cài đặt bằng LogOut */}
