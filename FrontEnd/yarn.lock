@@ -2567,7 +2567,6 @@
   "resolved" "file:"
   "version" "1.0.0"
   dependencies:
-    "@react-native-async-storage/async-storage" "^2.0.0"
     "@react-navigation/native" "^6.1.18"
     "@react-navigation/stack" "^6.4.1"
     "axios" "^1.7.7"
@@ -4729,11 +4728,6 @@
     "universalify" "^2.0.0"
   optionalDependencies:
     "graceful-fs" "^4.1.6"
-
-"jwt-decode@^4.0.0":
-  "integrity" "sha512-+KJGIyHgkGuIq3IEBNftfhW/LfWhXUIY6OmyVWjliu5KH1y0fw7VQ8YndE2O4qZdMSd9SqbnC8GOcZEy0Om7sA=="
-  "resolved" "https://registry.npmjs.org/jwt-decode/-/jwt-decode-4.0.0.tgz"
-  "version" "4.0.0"
 
 "kind-of@^6.0.2":
   "integrity" "sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw=="

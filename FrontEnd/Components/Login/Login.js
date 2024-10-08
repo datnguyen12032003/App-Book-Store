@@ -36,36 +36,27 @@ const handleLogin = () => {
     return;
   }
 
-  axios.post('http://10.66.184.70:3000/api/users/login', {
+  axios.post('http://192.168.10.19:3000/api/users/login', {
     username,
     password,
   })
   .then(async (response) => {
-    const { token, role } = response.data; // Lấy token và role từ phản hồi API
-    console.log("Token:", token);
-    console.log("Role:", role);
-
+    console.log("Phản hồi từ API:", response.data); // Kiểm tra phản hồi API
+    const token = response.data.token; // Lấy token từ phản hồi
+  
     // Kiểm tra xem token có hợp lệ không
     if (token) {
       // Lưu token vào AsyncStorage
       try {
         await AsyncStorage.setItem('userToken', token);
-        await AsyncStorage.setItem('userRole', role); // Lưu role vào AsyncStorage
-        console.log("Token đã được lưu:", token);
-        console.log("Role đã được lưu:", role);
-
-        // Điều hướng tới màn hình dựa trên role
-        if (role === 'admin') {
-          navigation.navigate("HomeAdmin"); // Điều hướng đến màn hình quản trị 
-        } else {
-          navigation.navigate("HomeScreen"); // Điều hướng đến màn hình người dùng 
-        }
+        Alert.alert("Đăng nhập thành công", "Bạn đã đăng nhập thành công.");
+        // Điều hướng tới màn hình chính
+        navigation.navigate("Home");
       } catch (error) {
-        console.error('Lỗi khi lưu token hoặc role:', error);
+        console.error('Lỗi khi lưu token:', error);
       }
     } else {
       Alert.alert("Lỗi", "Token không hợp lệ.");
-      console.log(token);
     }
   })
   .catch((error) => {
@@ -74,9 +65,8 @@ const handleLogin = () => {
       Alert.alert("Đăng nhập thất bại", "Sai username hoặc mật khẩu.");
     }
   });
+  
 };
-
-
 // quay lại trnag trướcccc
   const handleBackPress = () => {
     navigation.goBack();
@@ -267,4 +257,3 @@ const styles = StyleSheet.create({
 });
 
 export default Login;
-
