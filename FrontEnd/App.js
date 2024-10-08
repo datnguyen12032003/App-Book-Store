@@ -19,6 +19,7 @@ import BookListAdmin from "./Components/HomeAdmin/BookListAdmin";
 import BookDetailAdmin from "./Components/HomeAdmin/BookDetailAdmin";
 import BookList from "./Components/HomeScreen/BookList";
 import BookDetail from "./Components/HomeScreen/BookDetail";
+import StatisticAdmin from "./Components/HomeAdmin/StatisticAdmin";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -118,6 +119,13 @@ export default function App() {
           component={BookDetail}
           options={{ title: "Book Detail For User" }}
         />
+
+<Stack.Screen
+          name="StatisticAdmin"
+          component={StatisticAdmin}
+          options={{ title: "Statistic For Admin" }}
+        />
+
 
       </Stack.Navigator>
       <Toast />

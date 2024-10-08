@@ -66,7 +66,7 @@ const HomeAdmin = () => {
           <Text style={styles.cardText}>Order management</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('Analytics')}>
+        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('StatisticAdmin')}>
           <Ionicons name="bar-chart" size={32} color="#000" />
           <Text style={styles.cardText}>Statistics</Text>
         </TouchableOpacity>
