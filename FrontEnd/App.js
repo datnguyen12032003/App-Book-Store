@@ -14,7 +14,7 @@ import ForgotPassword from "./Components/Password/forgotpassword";
 import Profile from "./Components/HomeScreen/Profile/Profile";
 import UpdateProfile from "./Components/HomeScreen/Profile/UpdateProfile";
 import ChangePassword from "./Components/Password/ChangePassword";
-
+import OrderManagement from "./Components/HomeAdmin/OrderManagements/OrderManagement";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -86,6 +86,11 @@ export default function App() {
           name="ChangePassword"
           component={ChangePassword}
           options={{ title: "Change Password" }}
+        />
+        <Stack.Screen
+          name="OrderManagement"
+          component={OrderManagement}
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
       <Toast />

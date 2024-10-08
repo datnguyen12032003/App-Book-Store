@@ -54,7 +54,7 @@ orderRouter.post(
     Order.findByIdAndUpdate(
       req.params.orderId,
       {
-        $set: { status: req.body.status },
+        $set: { order_status: req.body.status },
       },
       { new: true }
     )
