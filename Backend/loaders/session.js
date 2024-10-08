@@ -6,5 +6,8 @@ module.exports = session({
   secret: "123456-7890-09876-54321",
   saveUninitialized: false,
   resave: false,
-  store: new FileStore(),
+  store: new FileStore({
+    path: './sessions', 
+    ttl: 86400
+}),
 });

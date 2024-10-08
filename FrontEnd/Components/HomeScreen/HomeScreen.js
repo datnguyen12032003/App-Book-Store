@@ -29,6 +29,7 @@ const HomeScreen = () => {
     console.log("Token sau khi đăng xuất:", token); // Sẽ in ra null nếu token đã bị xóa
     console.log("Role sau khi đăng xuất:", role);   // Sẽ in ra null nếu role đã bị xóa
       // Điều hướng trở lại trang Login
+      
       navigation.navigate("Login");
     } catch (error) {
       console.error("Lỗi khi đăng xuất:", error);
