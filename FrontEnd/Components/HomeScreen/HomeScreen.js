@@ -7,10 +7,13 @@ import {
   Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomeScreen = () => {
   const navigation = useNavigation(); // Sử dụng useNavigation bên trong component
+
+  
 
   // Hàm xử lý LogOut
   const handleLogout = async () => {
@@ -20,11 +23,11 @@ const HomeScreen = () => {
       await AsyncStorage.removeItem('userRole');
       Alert.alert("Đăng xuất thành công", "Bạn đã đăng xuất thành công.");
       
-      // Kiểm tra lại xem token đã bị xóa chưa
-      const token = await AsyncStorage.getItem('userToken');
-      const role = await AsyncStorage.getItem('userRole');
-      console.log("Token sau khi đăng xuất:", token); // Sẽ in ra null nếu token đã bị xóa
-      console.log("Role sau khi đăng xuất:", role);   // Sẽ in ra null nếu role đã bị xóa
+       // Kiểm tra lại xem token đã bị xóa chưa
+    const token = await AsyncStorage.getItem('userToken');
+    const role = await AsyncStorage.getItem('userRole');
+    console.log("Token sau khi đăng xuất:", token); // Sẽ in ra null nếu token đã bị xóa
+    console.log("Role sau khi đăng xuất:", role);   // Sẽ in ra null nếu role đã bị xóa
       // Điều hướng trở lại trang Login
       navigation.navigate("Login");
     } catch (error) {
@@ -35,11 +38,6 @@ const HomeScreen = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Chào mừng đến với Home Screen</Text>
-
-      {/* Nút điều hướng đến BookList */}
-      <TouchableOpacity style={styles.logoutButton} onPress={() => navigation.navigate('BookList')}>
-        <Text style={styles.logoutText}>Book List</Text>
-      </TouchableOpacity>
 
       {/* Nút LogOut */}
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
@@ -60,6 +58,13 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     color: "#333",
+  },
+  backButton: {
+    position: "absolute",
+    top: 12,
+    left: 10,
+    zIndex: 1,
+    padding: 10,
   },
   logoutButton: {
     marginTop: 20,

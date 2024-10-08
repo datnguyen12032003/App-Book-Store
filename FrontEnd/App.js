@@ -14,11 +14,6 @@ import ForgotPassword from "./Components/Password/forgotpassword";
 import Profile from "./Components/HomeScreen/Profile/Profile";
 import UpdateProfile from "./Components/HomeScreen/Profile/UpdateProfile";
 import ChangePassword from "./Components/Password/ChangePassword";
-import CreateBookScreen from "./Components/HomeAdmin/CreateBookScreen";
-import BookListAdmin from "./Components/HomeAdmin/BookListAdmin";
-import BookDetailAdmin from "./Components/HomeAdmin/BookDetailAdmin";
-import BookList from "./Components/HomeScreen/BookList";
-import BookDetail from "./Components/HomeScreen/BookDetail";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -92,33 +87,6 @@ export default function App() {
           component={ChangePassword}
           options={{ title: "Change Password" }}
         />
-        {/* Thang */}
-          <Stack.Screen
-          name="CreateBookScreen"
-          component={CreateBookScreen}
-          options={{ title: "Create Book Screen" }}
-        />
-        <Stack.Screen
-          name="BookListAdmin"
-          component={BookListAdmin}
-          options={{ title: "Book List For Admin" }}
-        />
-         <Stack.Screen
-          name="BookDetailAdmin"
-          component={BookDetailAdmin}
-          options={{ title: "Book Detail For Admin" }}
-        />
-            <Stack.Screen
-          name="BookList"
-          component={BookList}
-          options={{ title: "Book List For User" }}
-        />
-                <Stack.Screen
-          name="BookDetail"
-          component={BookDetail}
-          options={{ title: "Book Detail For User" }}
-        />
-
       </Stack.Navigator>
       <Toast />
     </NavigationContainer>
