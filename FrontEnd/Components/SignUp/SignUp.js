@@ -13,16 +13,15 @@ import {
 import CheckBox from "expo-checkbox";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import axios from 'axios';
-
+import axios from "../../axiosConfig";
 const SignUp = () => {
   const [isSelected, setIsSelected] = useState(false);
   const [secureTextEntry, setSecureTextEntry] = useState(true);
-  const [fullname, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');  // Thêm số điện thoại
-  const [address, setAddress] = useState(''); // Thêm địa chỉ
-  const [password, setPassword] = useState('');
+  const [fullname, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState(""); // Thêm số điện thoại
+  const [address, setAddress] = useState(""); // Thêm địa chỉ
+  const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [admin, setAdmin] = useState(false);
   const navigation = useNavigation();
@@ -35,55 +34,75 @@ const SignUp = () => {
     navigation.goBack();
   };
 
-
-  const handleSignUp = () => {
-    console.log("Sign Up button pressed"); 
-    if (fullname === '' || email === '' || phone === '' || address === '' || password === '') {
+  const handleSignUp = async () => {
+    console.log("Sign Up button pressed");
+    
+    // Validate email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      Alert.alert("Email không hợp lệ", "Vui lòng nhập địa chỉ email hợp lệ.");
+      return;
+    }
+  
+    // Validate password length
+    if (password.length < 6) {
+      Alert.alert("Mật khẩu quá ngắn", "Mật khẩu phải có ít nhất 6 ký tự.");
+      return;
+    }
+  
+    // Validate phone number (10 or 11 digits)
+    const phoneRegex = /^[0-9]{10,11}$/;
+    if (!phoneRegex.test(phone)) {
+      Alert.alert("Số điện thoại không hợp lệ", "Vui lòng nhập số điện thoại hợp lệ.");
+      return;
+    }
+  
+    // Check if all required fields are filled
+    if (fullname === "" || email === "" || phone === "" || address === "" || password === "") {
       Alert.alert("Điền đủ thông tin", "Vui lòng điền đầy đủ thông tin.");
       return;
     }
   
+    // Check if terms of service are accepted
     if (!isSelected) {
       Alert.alert("Chấp nhận điều khoản", "Vui lòng chấp nhận các điều khoản dịch vụ.");
       return;
     }
-
   
-    // Gọi API đăng ký
-    axios.post('http://192.168.10.19:3000/api/users/signup', {
-      username,
-      fullname,
-      email,
-      phone,
-      address,
-      password,
-      admin,
-    })
-    .then((response) => {
+    try {
+      // Make the API call to sign up
+      const response = await axios.post("/api/users/signup", {
+        username,
+        fullname,
+        email,
+        phone,
+        address,
+        password,
+        admin,
+      });
+  
+      // Success Alert
       Alert.alert("Đăng ký thành công", "Bạn đã đăng ký thành công.");
       navigation.navigate("Login");
-    })
-    .catch((error) => {
+  
+    } catch (error) {
+      // Handle errors
       if (error.response) {
+        Alert.alert("Đăng ký thất bại", "Tài khoản đã tồn tại!");
         console.error("Error response data:", error.response.data);
-        console.error("Error response status:", error.response.status);
-        console.error("Error response headers:", error.response.headers);
-      Alert.alert("Đăng ký thất bại", "Tài khoản đã tồn tại!");
-    } else if (error.request) {
-      Alert.alert("Đăng ký thất bại", "Không có phản hồi từ server.");
-    } else {
-      Alert.alert(
-        "Đăng ký thất bại","Có lỗi xảy ra trong quá trình xử lý yêu cầu."
-      );
+      } else if (error.request) {
+        Alert.alert("Đăng ký thất bại", "Không có phản hồi từ server.");
+      } else {
+        Alert.alert("Đăng ký thất bại", "Có lỗi xảy ra trong quá trình xử lý yêu cầu.");
+      }
+      console.error("Error config:", error.config);
     }
-    console.error("Error config:", error.config);
-  });
-};
-
+  };
+  
 
   return (
     <ImageBackground
-      source={require("../../../../App-Book-Store/FrontEnd/assets/Images/onboarding/background.jpg")}
+      source={require("../../assets/Images/onboarding/background.jpg")}
       resizeMode="cover"
       style={{ width: "100%", height: "100%" }}
     >
@@ -92,15 +111,12 @@ const SignUp = () => {
         <Ionicons name="arrow-back" size={24} color="black" />
       </TouchableOpacity>
 
-
       <View style={{ alignItems: "center", marginTop: 20 }}>
         <Text style={styles.welcomeText}>SIGN UP NOW</Text>
       </View>
 
-
-
       <View style={{ padding: 30, marginTop: -10 }}>
-      <View
+        <View
           style={{
             position: "relative",
             backgroundColor: "rgba(255, 255, 255, 0.6)",
@@ -110,7 +126,7 @@ const SignUp = () => {
             marginTop: 0,
           }}
         >
-        <View style={styles.group}>
+          <View style={styles.group}>
             <TextInput
               placeholder="Username"
               style={styles.inpt}
@@ -165,7 +181,7 @@ const SignUp = () => {
             <TouchableOpacity onPress={toggleSecureTextEntry}>
               <Image
                 style={{ width: 25, height: 25 }}
-                source={require("../../../../App-Book-Store/FrontEnd/assets/Images/onboarding/Show_password_icon_eye_symbol_vector_vision-1024.png")}
+                source={require("../../assets/Images/onboarding/Show_password_icon_eye_symbol_vector_vision-1024.png")}
               />
             </TouchableOpacity>
           </View>
@@ -183,9 +199,7 @@ const SignUp = () => {
             </View>
             <View style={styles.group1}>
               <TouchableOpacity onPress={() => Alert.alert("hello")}>
-                <Text style={styles.forgotPasswordText}>
-                  Terms of service
-                </Text>
+                <Text style={styles.forgotPasswordText}>Terms of service</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -220,12 +234,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingBottom: 50,
   },
-  
+
   welcomeText: {
     fontSize: 40,
-    fontWeight: 'bold',
-    color: 'white',  // Màu chữ
-    textShadowColor: '#000', // Màu đổ bóng
+    fontWeight: "bold",
+    color: "white", // Màu chữ
+    textShadowColor: "#000", // Màu đổ bóng
     textShadowOffset: { width: 2, height: 2 }, // Độ lệch bóng
     textShadowRadius: 5, // Độ mờ của bóng
     marginTop: 20, // Điều chỉnh khoảng cách

@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import axios from 'axios';
+import axios from "../../axiosConfig";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const WIDTH = Dimensions.get("window").width;
@@ -30,43 +30,58 @@ const Login = () => {
     setSecureTextEntry(!secureTextEntry);
   };
 // Hàm xử lý đăng nhập qua API
-const handleLogin = () => {
+const handleLogin = async () => {
+  console.log("Username:", username);
+  console.log("Password:", password);
   if (username === '' || password === '') {
     Alert.alert("Điền đủ thông tin", "Vui lòng điền đầy đủ username và mật khẩu.");
     return;
   }
 
-  axios.post('http://192.168.10.19:3000/api/users/login', {
-    username,
-    password,
-  })
-  .then(async (response) => {
-    console.log("Phản hồi từ API:", response.data); // Kiểm tra phản hồi API
-    const token = response.data.token; // Lấy token từ phản hồi
-  
+  try {
+    const response = await axios.post("/api/users/login", {
+      username,
+      password,
+    });
+    console.log("Response data:", response.data);
+
+    const { token, role } = response.data; // Lấy token và role từ phản hồi API
+    console.log("Token:", token);
+    console.log("Role:", role);
+
     // Kiểm tra xem token có hợp lệ không
     if (token) {
       // Lưu token vào AsyncStorage
       try {
         await AsyncStorage.setItem('userToken', token);
-        Alert.alert("Đăng nhập thành công", "Bạn đã đăng nhập thành công.");
-        // Điều hướng tới màn hình chính
-        navigation.navigate("Home");
+        await AsyncStorage.setItem('userRole', role); // Lưu role vào AsyncStorage
+        console.log("Token đã được lưu:", token);
+        console.log("Role đã được lưu:", role);
+
+        // Điều hướng tới màn hình dựa trên role
+        if (role === 'admin') {
+          navigation.navigate("HomeAdmin"); // Điều hướng đến màn hình quản trị 
+        } else {
+          navigation.navigate("HomeScreen"); // Điều hướng đến màn hình người dùng 
+        }
       } catch (error) {
-        console.error('Lỗi khi lưu token:', error);
+        console.error('Lỗi khi lưu token hoặc role:', error);
       }
     } else {
       Alert.alert("Lỗi", "Token không hợp lệ.");
+      console.log(token);
     }
-  })
-  .catch((error) => {
+  } catch (error) {
     if (error.response) {
       console.error("Error response data:", error.response.data);
       Alert.alert("Đăng nhập thất bại", "Sai username hoặc mật khẩu.");
+    } else {
+      console.error("Lỗi:", error);
     }
-  });
-  
+  }
 };
+
+
 // quay lại trnag trướcccc
   const handleBackPress = () => {
     navigation.goBack();
@@ -74,7 +89,7 @@ const handleLogin = () => {
 
   return (
     <ImageBackground
-      source={require("../../../../App-Book-Store/FrontEnd/assets/Images/onboarding/background.jpg")}
+      source={require("../../assets/Images/onboarding/background.jpg")}
       resizeMode="cover"
       style={{ width: "100%", height: "100%" }}
     >
@@ -104,7 +119,7 @@ const handleLogin = () => {
           <View style={{ position: "absolute", top:-40, left: "40%" }}>
             <Image
               style={styles.imgPerson}
-              source={require("../../../../App-Book-Store/FrontEnd/assets/Images/onboarding/aa.jpg")}
+              source={require("../../assets/Images/onboarding/aa.jpg")}
             />
           </View>
 
@@ -112,7 +127,7 @@ const handleLogin = () => {
             <View style={styles.group}>
               <Image
                 style={styles.imgIcon}
-                source={require("../../../../App-Book-Store/FrontEnd/assets/Images/onboarding/username-icon-png-7.jpg")}
+                source={require("../../assets/Images/onboarding/username-icon-png-7.jpg")}
               />
                <TextInput
                 placeholder="User Name"
@@ -125,7 +140,7 @@ const handleLogin = () => {
             <View style={styles.group}>
               <Image
                 style={styles.imgIcon}
-                source={require("../../../../App-Book-Store/FrontEnd/assets/Images/onboarding/130-1303682_security-password-2-icon-password-icon-in-png.png")}
+                source={require("../../assets/Images/onboarding/130-1303682_security-password-2-icon-password-icon-in-png.png")}
               />
               <TextInput
                 placeholder="Password"
@@ -137,7 +152,7 @@ const handleLogin = () => {
               <TouchableOpacity onPress={toggleSecureTextEntry}>
                 <Image
                   style={{ width: 25, height: 25 }}
-                  source={require("../../../../App-Book-Store/FrontEnd/assets/Images/onboarding/Show_password_icon_eye_symbol_vector_vision-1024.png")}
+                  source={require("../../assets/Images/onboarding/Show_password_icon_eye_symbol_vector_vision-1024.png")}
                 />
               </TouchableOpacity>
             </View>
@@ -257,3 +272,4 @@ const styles = StyleSheet.create({
 });
 
 export default Login;
+
