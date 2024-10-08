@@ -13,7 +13,8 @@ import {
 import CheckBox from "expo-checkbox";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import axios from "../../axiosConfig";
+import axios from "axios";
+
 const SignUp = () => {
   const [isSelected, setIsSelected] = useState(false);
   const [secureTextEntry, setSecureTextEntry] = useState(true);
@@ -34,44 +35,52 @@ const SignUp = () => {
     navigation.goBack();
   };
 
-  const handleSignUp = async () => {
+  const handleSignUp = () => {
     console.log("Sign Up button pressed");
-    
-    // Validate email
+    // Kiểm tra email hợp lệ
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       Alert.alert("Email không hợp lệ", "Vui lòng nhập địa chỉ email hợp lệ.");
       return;
     }
-  
-    // Validate password length
+
+    // Kiểm tra mật khẩu (ví dụ: ít nhất 6 ký tự)
     if (password.length < 6) {
       Alert.alert("Mật khẩu quá ngắn", "Mật khẩu phải có ít nhất 6 ký tự.");
       return;
     }
-  
-    // Validate phone number (10 or 11 digits)
+
+    // Kiểm tra số điện thoại chỉ chứa số và có độ dài chính xác (ví dụ: 10 hoặc 11 chữ số)
     const phoneRegex = /^[0-9]{10,11}$/;
     if (!phoneRegex.test(phone)) {
-      Alert.alert("Số điện thoại không hợp lệ", "Vui lòng nhập số điện thoại hợp lệ.");
+      Alert.alert(
+        "Số điện thoại không hợp lệ",
+        "Vui lòng nhập số điện thoại hợp lệ."
+      );
       return;
     }
-  
-    // Check if all required fields are filled
-    if (fullname === "" || email === "" || phone === "" || address === "" || password === "") {
+    if (
+      fullname === "" ||
+      email === "" ||
+      phone === "" ||
+      address === "" ||
+      password === ""
+    ) {
       Alert.alert("Điền đủ thông tin", "Vui lòng điền đầy đủ thông tin.");
       return;
     }
-  
-    // Check if terms of service are accepted
+
     if (!isSelected) {
-      Alert.alert("Chấp nhận điều khoản", "Vui lòng chấp nhận các điều khoản dịch vụ.");
+      Alert.alert(
+        "Chấp nhận điều khoản",
+        "Vui lòng chấp nhận các điều khoản dịch vụ."
+      );
       return;
     }
-  
-    try {
-      // Make the API call to sign up
-      const response = await axios.post("/api/users/signup", {
+
+    // Gọi API đăng ký
+    axios
+      .post("http://10.66.184.70:3000/api/users/signup", {
         username,
         fullname,
         email,
@@ -79,30 +88,32 @@ const SignUp = () => {
         address,
         password,
         admin,
+      })
+      .then((response) => {
+        Alert.alert("Đăng ký thành công", "Bạn đã đăng ký thành công.");
+        navigation.navigate("Login");
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.error("Error response data:", error.response.data);
+          console.error("Error response status:", error.response.status);
+          console.error("Error response headers:", error.response.headers);
+          Alert.alert("Đăng ký thất bại", "Tài khoản đã tồn tại!");
+        } else if (error.request) {
+          Alert.alert("Đăng ký thất bại", "Không có phản hồi từ server.");
+        } else {
+          Alert.alert(
+            "Đăng ký thất bại",
+            "Có lỗi xảy ra trong quá trình xử lý yêu cầu."
+          );
+        }
+        console.error("Error config:", error.config);
       });
-  
-      // Success Alert
-      Alert.alert("Đăng ký thành công", "Bạn đã đăng ký thành công.");
-      navigation.navigate("Login");
-  
-    } catch (error) {
-      // Handle errors
-      if (error.response) {
-        Alert.alert("Đăng ký thất bại", "Tài khoản đã tồn tại!");
-        console.error("Error response data:", error.response.data);
-      } else if (error.request) {
-        Alert.alert("Đăng ký thất bại", "Không có phản hồi từ server.");
-      } else {
-        Alert.alert("Đăng ký thất bại", "Có lỗi xảy ra trong quá trình xử lý yêu cầu.");
-      }
-      console.error("Error config:", error.config);
-    }
   };
-  
 
   return (
     <ImageBackground
-      source={require("../../assets/Images/onboarding/background.jpg")}
+      source={require("../../../../App-Book-Store/FrontEnd/assets/Images/onboarding/background.jpg")}
       resizeMode="cover"
       style={{ width: "100%", height: "100%" }}
     >
@@ -181,7 +192,7 @@ const SignUp = () => {
             <TouchableOpacity onPress={toggleSecureTextEntry}>
               <Image
                 style={{ width: 25, height: 25 }}
-                source={require("../../assets/Images/onboarding/Show_password_icon_eye_symbol_vector_vision-1024.png")}
+                source={require("../../../../App-Book-Store/FrontEnd/assets/Images/onboarding/Show_password_icon_eye_symbol_vector_vision-1024.png")}
               />
             </TouchableOpacity>
           </View>
