@@ -13,9 +13,8 @@ import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 const Profile = () => {
   const [userData, setUserData] = useState(null);
-  const navigation = useNavigation(); // Khai báo useNavigation
+  const navigation = useNavigation();
 
-  // Định nghĩa fetchData ngoài useEffect
   const fetchData = async () => {
     try {
       const token = await AsyncStorage.getItem("userToken");
@@ -36,7 +35,6 @@ const Profile = () => {
     }
   };
 
-  // Gọi fetchData khi component được hiển thị
   useFocusEffect(
     React.useCallback(() => {
       fetchData();
@@ -49,6 +47,10 @@ const Profile = () => {
 
   const handleChangePassword = () => {
     navigation.navigate("ChangePassword");
+  };
+
+  const handleHistoryPurchase = () => {
+    navigation.navigate("HistoryPurchase");
   };
 
   return (
@@ -82,6 +84,14 @@ const Profile = () => {
               onPress={handleChangePassword}
             >
               <Text style={styles.buttonText}>Change Password</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.historyButtonContainer}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={handleHistoryPurchase}
+            >
+              <Text style={styles.buttonText}>History Purchase</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -139,6 +149,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 20,
+  },
+  historyButtonContainer: {
+    marginTop: 20, // Add some margin for spacing
+    alignItems: "center", // Center the History Purchase button
   },
   button: {
     backgroundColor: "#FF8C00",
