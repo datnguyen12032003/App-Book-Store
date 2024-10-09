@@ -15,6 +15,7 @@ import Profile from "./Components/HomeScreen/Profile/Profile";
 import UpdateProfile from "./Components/HomeScreen/Profile/UpdateProfile";
 import ChangePassword from "./Components/Password/ChangePassword";
 import OrderManagement from "./Components/HomeAdmin/OrderManagements/OrderManagement";
+import HistoryPurchase from "./Components/HomeScreen/Profile/HistoryPurchase";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -90,6 +91,11 @@ export default function App() {
         <Stack.Screen
           name="OrderManagement"
           component={OrderManagement}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="HistoryPurchase"
+          component={HistoryPurchase}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
