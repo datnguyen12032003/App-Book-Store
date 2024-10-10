@@ -61,7 +61,7 @@ const handleLogin = async () => {
         // Điều hướng tới màn hình dựa trên role
         if (role === 'admin') {
           navigation.navigate("HomeAdmin"); // Điều hướng đến màn hình quản trị 
-        } else {
+        } else if (role === 'user') {
           navigation.navigate("HomeScreen"); // Điều hướng đến màn hình người dùng 
         }
       } catch (error) {
