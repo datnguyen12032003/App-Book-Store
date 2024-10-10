@@ -14,6 +14,13 @@ import ForgotPassword from "./Components/Password/forgotpassword";
 import Profile from "./Components/HomeScreen/Profile/Profile";
 import UpdateProfile from "./Components/HomeScreen/Profile/UpdateProfile";
 import ChangePassword from "./Components/Password/ChangePassword";
+import CreateBookScreen from "./Components/HomeAdmin/CreateBookScreen";
+import BookListAdmin from "./Components/HomeAdmin/BookListAdmin";
+import BookDetailAdmin from "./Components/HomeAdmin/BookDetailAdmin";
+import BookList from "./Components/HomeScreen/BookList";
+import BookDetail from "./Components/HomeScreen/BookDetail";
+import StatisticAdmin from "./Components/HomeAdmin/StatisticAdmin";
+
 import OrderManagement from "./Components/HomeAdmin/OrderManagements/OrderManagement";
 import HistoryPurchase from "./Components/HomeScreen/Profile/HistoryPurchase";
 const Stack = createStackNavigator();
@@ -88,6 +95,40 @@ export default function App() {
           component={ChangePassword}
           options={{ title: "Change Password" }}
         />
+        {/* Thang */}
+          <Stack.Screen
+          name="CreateBookScreen"
+          component={CreateBookScreen}
+          options={{ title: "Create Book Screen" }}
+        />
+        <Stack.Screen
+          name="BookListAdmin"
+          component={BookListAdmin}
+          options={{ title: "Book List For Admin" }}
+        />
+         <Stack.Screen
+          name="BookDetailAdmin"
+          component={BookDetailAdmin}
+          options={{ title: "Book Detail For Admin" }}
+        />
+            <Stack.Screen
+          name="BookList"
+          component={BookList}
+          options={{ title: "Book List For User" }}
+        />
+                <Stack.Screen
+          name="BookDetail"
+          component={BookDetail}
+          options={{ title: "Book Detail For User" }}
+        />
+
+<Stack.Screen
+          name="StatisticAdmin"
+          component={StatisticAdmin}
+          options={{ title: "Statistic For Admin" }}
+        />
+
+
         <Stack.Screen
           name="OrderManagement"
           component={OrderManagement}

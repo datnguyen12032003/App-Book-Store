@@ -97,7 +97,8 @@ const SignUp = () => {
       }
       console.error("Error config:", error.config);
     }
-  };    
+  };
+  
 
   return (
     <ImageBackground

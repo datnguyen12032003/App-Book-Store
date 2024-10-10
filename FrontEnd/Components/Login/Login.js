@@ -31,6 +31,8 @@ const Login = () => {
   };
 // Hàm xử lý đăng nhập qua API
 const handleLogin = async () => {
+  console.log("Username:", username);
+  console.log("Password:", password);
   if (username === '' || password === '') {
     Alert.alert("Điền đủ thông tin", "Vui lòng điền đầy đủ username và mật khẩu.");
     return;
@@ -41,6 +43,7 @@ const handleLogin = async () => {
       username,
       password,
     });
+    console.log("Response data:", response.data);
 
     const { token, role } = response.data; // Lấy token và role từ phản hồi API
     console.log("Token:", token);
