@@ -40,32 +40,32 @@ const SignUp = () => {
     // Validate email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      Alert.alert("Email không hợp lệ", "Vui lòng nhập địa chỉ email hợp lệ.");
+      Alert.alert("Invalid email!", "Please enter valid email!");
       return;
     }
   
     // Validate password length
     if (password.length < 6) {
-      Alert.alert("Mật khẩu quá ngắn", "Mật khẩu phải có ít nhất 6 ký tự.");
+      Alert.alert("Password too short!", "Password must have at least 6 characters!");
       return;
     }
   
     // Validate phone number (10 or 11 digits)
     const phoneRegex = /^[0-9]{10,11}$/;
     if (!phoneRegex.test(phone)) {
-      Alert.alert("Số điện thoại không hợp lệ", "Vui lòng nhập số điện thoại hợp lệ.");
+      Alert.alert("Invalid phone number!", "Please enter valid phone number!");
       return;
     }
   
     // Check if all required fields are filled
     if (fullname === "" || email === "" || phone === "" || address === "" || password === "") {
-      Alert.alert("Điền đủ thông tin", "Vui lòng điền đầy đủ thông tin.");
+      Alert.alert("Fill out full information!", "Please fill out full information!");
       return;
     }
   
     // Check if terms of service are accepted
     if (!isSelected) {
-      Alert.alert("Chấp nhận điều khoản", "Vui lòng chấp nhận các điều khoản dịch vụ.");
+      Alert.alert("Acceptance of terms & conditions", "Please acceptance of terms& conditions!");
       return;
     }
   
@@ -82,18 +82,18 @@ const SignUp = () => {
       });
   
       // Success Alert
-      Alert.alert("Đăng ký thành công", "Bạn đã đăng ký thành công.");
+      Alert.alert("Signup successfully!", "You're signed up successfully!");
       navigation.navigate("Login");
   
     } catch (error) {
       // Handle errors
       if (error.response) {
-        Alert.alert("Đăng ký thất bại", "Tài khoản đã tồn tại!");
+        Alert.alert("Signup failed!", "This account existed!");
         console.error("Error response data:", error.response.data);
       } else if (error.request) {
-        Alert.alert("Đăng ký thất bại", "Không có phản hồi từ server.");
+        Alert.alert("Signup failed!", "No response from server!");
       } else {
-        Alert.alert("Đăng ký thất bại", "Có lỗi xảy ra trong quá trình xử lý yêu cầu.");
+        Alert.alert("Signup failed!", "Something happened in request handle's processing!");
       }
       console.error("Error config:", error.config);
     }

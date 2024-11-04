@@ -1,15 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, Modal, TextInput, Button } from 'react-native';
-import axios from '../../axiosConfig'; // Cấu hình axios
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  TouchableOpacity,
+  Image,
+  Button,
+} from "react-native";
+import axios from "../../axiosConfig";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function BookDetail({ route, navigation }) {
-    const { bookId } = route.params; // Nhận bookId từ tham số
-
+  const { bookId } = route.params;
   const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [updatedBook, setUpdatedBook] = useState({});
 
   useEffect(() => {
     const fetchBookDetail = async () => {
@@ -19,7 +24,6 @@ function BookDetail({ route, navigation }) {
           headers: { Authorization: `Bearer ${token}` },
         });
         setBook(response.data);
-        setUpdatedBook(response.data); // Để dữ liệu sách đã tải được điền vào form
       } catch (error) {
         console.error("Error fetching book details:", error);
       } finally {
@@ -29,6 +33,33 @@ function BookDetail({ route, navigation }) {
 
     fetchBookDetail();
   }, [bookId]);
+
+  const addToCart = async (books) => {
+    if (books.quantity === 0) {
+      alert("Out of stock");
+      return;
+    }
+    try {
+      const token = await AsyncStorage.getItem("userToken");
+      const response = await axios.post(
+        "api/cart",
+        {
+          book: books._id,
+          price: books.price,
+          quantity: 1, // or any desired initial quantity
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Added to cart:", response.data);
+      alert("Add to cart successfully");
+    } catch (err) {
+      console.error("Error adding to cart:", err.message);
+    }
+  };
 
   if (loading) {
     return (
@@ -46,20 +77,41 @@ function BookDetail({ route, navigation }) {
     );
   }
 
+  // Select default image URL or fallback to first image
+  const imageUrl =
+    book.imageurls?.find((img) => img.defaultImg)?.imageUrl ||
+    book.imageurls?.[0]?.imageUrl ||
+    null;
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{book.title}</Text>
-      <Text style={styles.detailText}>Author: {book.author}</Text>
-      <Text style={styles.detailText}>Publisher: {book.publisher}</Text>
-      <Text style={styles.detailText}>Price: ${book.price}</Text>
-      <Text style={styles.detailText}>Description: {book.description}</Text>
-
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+      <View style={styles.layoutImage}>
+        {imageUrl && (
+          <Image source={{ uri: imageUrl }} style={styles.bookImage} />
+        )}
+      </View>
+      <View>
+        <Text style={styles.title}>{book.title}</Text>
+        <Text style={styles.detailText}>Author: {book.author}</Text>
+        <Text style={styles.detailText}>Publisher: {book.publisher}</Text>
+        <Text style={styles.detailText}>Price: ${book.price}</Text>
+        <Text style={styles.detailText}>Description: {book.description}</Text>
+      </View>
+      {/* <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => navigation.goBack()}
+      >
         <Text style={styles.backButtonText}>Quay lại</Text>
-      </TouchableOpacity>
-
-      {/* Modal Update */}
-    
+      </TouchableOpacity> */}
+      <View style={styles.layoutBtn}>
+        <Button
+          onPress={(e) => {
+            e.preventDefault();
+            addToCart(book); // Chuyển từ 'books' thành 'item'
+          }}
+          title="Add to cart"
+        />
+      </View>
     </View>
   );
 }
@@ -67,12 +119,19 @@ function BookDetail({ route, navigation }) {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: "#F5F5F5",
     flex: 1,
+  },
+  bookImage: {
+    width: 200,
+    height: 200,
+    resizeMode: "cover",
+    marginBottom: 10,
+    borderRadius: 10,
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
   },
   detailText: {
@@ -81,20 +140,26 @@ const styles = StyleSheet.create({
   },
   loadingContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   backButton: {
     marginTop: 20,
     padding: 10,
-    backgroundColor: 'blue',
+    backgroundColor: "blue",
     borderRadius: 5,
-    alignItems: 'center',
+    alignItems: "center",
   },
   backButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
+    color: "white",
+    fontWeight: "bold",
   },
+  layoutImage: {
+    alignItems: "center",
+  },
+  layoutBtn: {
+    paddingTop: 10
+  }
 });
 
 export default BookDetail;

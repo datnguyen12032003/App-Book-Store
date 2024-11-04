@@ -25,7 +25,7 @@ const HomeAdmin = () => {
       // Xóa token và role khỏi AsyncStorage
       await AsyncStorage.removeItem('userToken');
       await AsyncStorage.removeItem('userRole');
-      Alert.alert("Đăng xuất thành công", "Bạn đã đăng xuất thành công.");
+      Alert.alert("Log out successfully!", "Logged out successfully!");
       
        // Kiểm tra lại xem token đã bị xóa chưa
     const token = await AsyncStorage.getItem('userToken');
@@ -55,7 +55,7 @@ const HomeAdmin = () => {
           <Ionicons name="cube" size={32} color="#000" />
           <Text style={styles.cardText}>Book Management</Text>
         </TouchableOpacity>
-
+        
         {/* <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('CreateBookScreen')}>
           <Ionicons name="create" size={32} color="#000" />
           <Text style={styles.cardText}>Thêm Sản Phẩm</Text>

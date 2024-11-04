@@ -5,9 +5,11 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
+  Image,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import BookList from "./BookList";
 
 const HomeScreen = () => {
   const navigation = useNavigation(); // Sử dụng useNavigation bên trong component
@@ -18,7 +20,7 @@ const HomeScreen = () => {
       // Xóa token và role khỏi AsyncStorage
       await AsyncStorage.removeItem('userToken');
       await AsyncStorage.removeItem('userRole');
-      Alert.alert("Đăng xuất thành công", "Bạn đã đăng xuất thành công.");
+      Alert.alert("Log out successfully!", "You're logged out successfully!");
       
       // Kiểm tra lại xem token đã bị xóa chưa
       const token = await AsyncStorage.getItem('userToken');
@@ -35,16 +37,27 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Chào mừng đến với Home Screen</Text>
+      {/* <Text style={styles.text}>Chào mừng đến với Home Screen</Text> */}
 
       {/* Nút điều hướng đến BookList */}
-      <TouchableOpacity style={styles.logoutButton} onPress={() => navigation.navigate('BookList')}>
+      {/* <TouchableOpacity style={styles.logoutButton} onPress={() => navigation.navigate('BookList')}>
         <Text style={styles.logoutText}>Book List</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
+
+      <BookList />
 
       {/* Nút LogOut */}
-      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+      {/* <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <Text style={styles.logoutText}>Log Out</Text>
+      </TouchableOpacity> */}
+      <TouchableOpacity
+        style={styles.outlineCartBtn}
+        onPress={() => navigation.navigate("Cart")}
+      >
+        <Image
+          style={styles.cartIcon}
+          source={require("../../assets/Images/onboarding/icons8-shopping-cart-96.png")}
+        />
       </TouchableOpacity>
     </View>
   );
@@ -74,6 +87,15 @@ const styles = StyleSheet.create({
   logoutText: {
     color: "white",
     fontWeight: "bold",
+  },
+  cartIcon: {
+    width: 30,
+    height: 30,
+  },
+  outlineCartBtn: {
+    position: "absolute",
+    top: 460,
+    right: 30,
   },
 });
 

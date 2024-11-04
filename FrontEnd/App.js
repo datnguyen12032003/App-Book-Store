@@ -23,6 +23,8 @@ import StatisticAdmin from "./Components/HomeAdmin/StatisticAdmin";
 
 import OrderManagement from "./Components/HomeAdmin/OrderManagements/OrderManagement";
 import HistoryPurchase from "./Components/HomeScreen/Profile/HistoryPurchase";
+import CartPage from "./Components/Cart/CartPage";
+import ImageUploader from "./Components/HomeAdmin/ImageUploader";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -66,6 +68,11 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
+          name="Cart"
+          component={CartPage}
+          option={{ headerShown: false }}
+        />
+        <Stack.Screen
           name="ForgotPassword"
           component={ForgotPassword}
           options={{ headerShown: false }}
@@ -96,7 +103,7 @@ export default function App() {
           options={{ title: "Change Password" }}
         />
         {/* Thang */}
-          <Stack.Screen
+        <Stack.Screen
           name="CreateBookScreen"
           component={CreateBookScreen}
           options={{ title: "Create Book Screen" }}
@@ -106,28 +113,32 @@ export default function App() {
           component={BookListAdmin}
           options={{ title: "Book List For Admin" }}
         />
-         <Stack.Screen
+        <Stack.Screen
+          name="ImageUploader"
+          component={ImageUploader}
+          options={{ title: "Image Upload For Admin" }}
+        />
+        <Stack.Screen
           name="BookDetailAdmin"
           component={BookDetailAdmin}
           options={{ title: "Book Detail For Admin" }}
         />
-            <Stack.Screen
+        <Stack.Screen
           name="BookList"
           component={BookList}
           options={{ title: "Book List For User" }}
         />
-                <Stack.Screen
+        <Stack.Screen
           name="BookDetail"
           component={BookDetail}
           options={{ title: "Book Detail For User" }}
         />
 
-<Stack.Screen
+        <Stack.Screen
           name="StatisticAdmin"
           component={StatisticAdmin}
           options={{ title: "Statistic For Admin" }}
         />
-
 
         <Stack.Screen
           name="OrderManagement"
