@@ -32,15 +32,15 @@ function BookListAdmin() {
   // Hàm xác nhận xóa sách
   const confirmDelete = (bookId) => {
     Alert.alert(
-      "Xác Nhận Xóa",
-      "Bạn có chắc chắn muốn xóa sách này không?",
+      "Confirm Delete",
+      "Do you want to delete this book?",
       [
         {
-          text: "Hủy",
+          text: "Cancel",
           style: "cancel",
         },
         {
-          text: "Xóa",
+          text: "Delete",
           onPress: () => deleteBook(bookId),
           style: "destructive",
         },

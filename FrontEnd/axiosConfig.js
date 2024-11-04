@@ -1,7 +1,7 @@
 // src/axiosConfig.js
 import axios from 'axios';
 const instance = axios.create({
-    baseURL: "http://10.66.174.163:3000/",    //backend
+    baseURL: "http://192.168.110.190:3000/",
 
     headers: {
       "Content-Type": "application/json",

@@ -34,7 +34,7 @@ const handleLogin = async () => {
   console.log("Username:", username);
   console.log("Password:", password);
   if (username === '' || password === '') {
-    Alert.alert("Điền đủ thông tin", "Vui lòng điền đầy đủ username và mật khẩu.");
+    Alert.alert("Notification", "Please fill full username and password!");
     return;
   }
 
@@ -68,13 +68,13 @@ const handleLogin = async () => {
         console.error('Lỗi khi lưu token hoặc role:', error);
       }
     } else {
-      Alert.alert("Lỗi", "Token không hợp lệ.");
+      Alert.alert("Error", "Invalid token!");
       console.log(token);
     }
   } catch (error) {
     if (error.response) {
       console.error("Error response data:", error.response.data);
-      Alert.alert("Đăng nhập thất bại", "Sai username hoặc mật khẩu.");
+      Alert.alert("Login failed!", "Invalid username or password!");
     } else {
       console.error("Lỗi:", error);
     }

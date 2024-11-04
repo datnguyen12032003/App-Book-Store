@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from "react-native";
 import axios from "../../../axiosConfig";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -41,6 +42,27 @@ const Profile = () => {
     }, [])
   );
 
+  // Hàm xử lý LogOut
+  const handleLogout = async () => {
+    try {
+      // Xóa token và role khỏi AsyncStorage
+      await AsyncStorage.removeItem("userToken");
+      await AsyncStorage.removeItem("userRole");
+      Alert.alert("Logout successfully!", "You're logged out successfully!");
+
+      // Kiểm tra lại xem token đã bị xóa chưa
+      const token = await AsyncStorage.getItem("userToken");
+      const role = await AsyncStorage.getItem("userRole");
+      console.log("Token sau khi đăng xuất:", token); // Sẽ in ra null nếu token đã bị xóa
+      console.log("Role sau khi đăng xuất:", role); // Sẽ in ra null nếu role đã bị xóa
+      // Điều hướng trở lại trang Login
+
+      navigation.navigate("Login");
+    } catch (error) {
+      console.error("Lỗi khi đăng xuất:", error);
+    }
+  };
+
   const handleUpdateProfile = () => {
     navigation.navigate("UpdateProfile");
   };
@@ -59,7 +81,9 @@ const Profile = () => {
         <ScrollView contentContainerStyle={styles.profileContainer}>
           <Text style={styles.title}>Profile</Text>
           <Image
-            source={{ uri: "https://via.placeholder.com/150" }}
+            source={{
+              uri: "https://th.bing.com/th/id/R.677d3abf75ddc6139ac411467c792eef?rik=Lqi7AtlZe%2fFXbw&pid=ImgRaw&r=0",
+            }}
             style={styles.profileImage}
           />
           <View style={styles.infoContainer}>
@@ -86,12 +110,15 @@ const Profile = () => {
               <Text style={styles.buttonText}>Change Password</Text>
             </TouchableOpacity>
           </View>
-          <View style={styles.historyButtonContainer}>
+          <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={styles.button}
               onPress={handleHistoryPurchase}
             >
               <Text style={styles.buttonText}>History Purchase</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={handleLogout}>
+              <Text style={styles.buttonText}>Log Out</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -147,8 +174,9 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
     marginTop: 20,
+    display: "flex",
+    gap: 5
   },
   historyButtonContainer: {
     marginTop: 20, // Add some margin for spacing
@@ -164,6 +192,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 5,
     shadowOffset: { width: 0, height: 2 },
+    width: 150
   },
   buttonText: {
     color: "#fff",

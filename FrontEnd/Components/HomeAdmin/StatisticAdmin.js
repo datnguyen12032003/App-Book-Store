@@ -31,7 +31,7 @@ const token = await AsyncStorage.getItem("userToken");
         }
       } catch (err) {
         setError(err.message);
-        Alert.alert("Lỗi", err.message);
+        Alert.alert("Error", err.message);
       } finally {
         setLoading(false);
       }
@@ -54,7 +54,7 @@ const token = await AsyncStorage.getItem("userToken");
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tổng số lượng đơn hàng thành công:</Text>
+      <Text style={styles.title}>Total order successfully:</Text>
       <Text style={styles.totalQuantityText}>{totalQuantity}</Text>
     </View>
   );
