@@ -43,21 +43,17 @@ const CartPage = () => {
 
   // Hàm xác nhận xóa sách
   const confirmDelete = (cartId, bookId) => {
-    Alert.alert(
-      "Confirm Delete",
-      "Do you want to delete this item?",
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "Delete",
-          onPress: () => deleteBook(cartId, bookId),
-          style: "destructive",
-        },
-      ]
-    );
+    Alert.alert("Confirm Delete", "Do you want to delete this item?", [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "Delete",
+        onPress: () => deleteBook(cartId, bookId),
+        style: "destructive",
+      },
+    ]);
   };
 
   const deleteBook = async (cartId, bookId) => {
@@ -92,47 +88,40 @@ const CartPage = () => {
   };
 
   const confirmDeleteSelected = async () => {
-    Alert.alert(
-      "Confirm Delete",
-      "Do you want to delete all item ?",
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "Delete",
-          onPress: async() => {
-            try {
-              const token = await AsyncStorage.getItem("userToken");
-        
-              // Gửi yêu cầu xóa tới backend với cartId và bookId đúng
-              const response = await axios.delete(
-                `api/cart/deleteCart`,
-                {
-                  headers: { Authorization: `Bearer ${token}` },
-                }
-              );
-              console.log(response.data);
-        
-              if (response.status === 200) {
-                // Cập nhật lại giỏ hàng sau khi xóa thành công
-                setCart([]);
-                console.log("Book deleted:", response.data);
-              } else {
-                console.warn("Failed to delete book, response:", response.data);
-              }
-            } catch (error) {
-              console.error(
-                "Error deleting book:",
-                error.response ? error.response.data : error.message
-              );
+    Alert.alert("Confirm Delete", "Do you want to delete all item ?", [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "Delete",
+        onPress: async () => {
+          try {
+            const token = await AsyncStorage.getItem("userToken");
+
+            // Gửi yêu cầu xóa tới backend với cartId và bookId đúng
+            const response = await axios.delete(`api/cart/deleteCart`, {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+            console.log(response.data);
+
+            if (response.status === 200) {
+              // Cập nhật lại giỏ hàng sau khi xóa thành công
+              setCart([]);
+              console.log("Book deleted:", response.data);
+            } else {
+              console.warn("Failed to delete book, response:", response.data);
             }
-          },
-          style: "destructive",
+          } catch (error) {
+            console.error(
+              "Error deleting book:",
+              error.response ? error.response.data : error.message
+            );
+          }
         },
-      ]
-    );
+        style: "destructive",
+      },
+    ]);
   };
 
   const toggleCheckbox = (id) => {
@@ -313,7 +302,25 @@ const CartPage = () => {
               >
                 <Text style={styles.orderText}>Delete All</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.outlineOrderBtn}>
+              <TouchableOpacity
+                style={styles.outlineOrderBtn}
+                onPress={() => {
+                  const selectedItemsList = cart.filter(
+                    (item) => selectedItems[item._id]
+                  );
+                  if (selectedItemsList.length > 0) {
+                    navigation.navigate("OrderDetailPage", {
+                      selectedItems: selectedItemsList,
+                      totalAmount: totalAmount,
+                    });
+                  } else {
+                    Alert.alert(
+                      "No items selected",
+                      "Please select items to buy."
+                    );
+                  }
+                }}
+              >
                 <Text style={styles.orderText}>Buy Now</Text>
               </TouchableOpacity>
             </View>

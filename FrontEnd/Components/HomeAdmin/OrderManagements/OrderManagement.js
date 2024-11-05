@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Modal,
   Alert,
+  Image,
   ImageBackground,
 } from "react-native";
 import axios from "../../../axiosConfig";
@@ -70,19 +71,19 @@ const OrderManagement = () => {
 
       switch (sortType) {
         case "price_desc":
-          return b.total_price - a.total_price; // Price descending
+          return b.total_price - a.total_price;
         case "price_asc":
-          return a.total_price - b.total_price; // Price ascending
+          return a.total_price - b.total_price;
         case "date_desc":
-          return new Date(b.order_date) - new Date(a.order_date); // Newest first
+          return new Date(b.order_date) - new Date(a.order_date);
         case "date_asc":
-          return new Date(a.order_date) - new Date(b.order_date); // Oldest first
+          return new Date(a.order_date) - new Date(b.order_date);
         case "name_asc":
-          return a.user.fullname.localeCompare(b.user.fullname); // Name A-Z
+          return a.user.fullname.localeCompare(b.user.fullname);
         case "name_desc":
-          return b.user.fullname.localeCompare(a.user.fullname); // Name Z-A
+          return b.user.fullname.localeCompare(a.user.fullname);
         default:
-          return 0; // No sorting
+          return 0;
       }
     });
   };
@@ -207,6 +208,41 @@ const OrderManagement = () => {
                     {new Date(selectedOrder.order_date).toLocaleDateString()}
                   </Text>
 
+                  <ScrollView style={{ maxHeight: 200 }}>
+                    {selectedOrder.order_details.map((item, index) => (
+                      <View key={index} style={styles.outlineItem}>
+                        <View style={styles.item}>
+                          <Image
+                            source={{
+                              uri:
+                                item.book.imageurls?.find(
+                                  (img) => img.defaultImg
+                                )?.imageUrl ||
+                                item.book.imageurls?.[0]?.imageUrl ||
+                                null,
+                            }}
+                            style={styles.image}
+                          />
+                          <View style={styles.rightContent}>
+                            <Text style={styles.title}>{item.book.title}</Text>
+                            <Text style={styles.text}>
+                              Quantity: {item.order_quantity}
+                            </Text>
+                            <Text style={styles.text}>
+                              Price: ${item.order_price.toFixed(2)}
+                            </Text>
+                            <Text style={styles.text}>
+                              Total: $
+                              {(item.order_price * item.order_quantity).toFixed(
+                                2
+                              )}
+                            </Text>
+                          </View>
+                        </View>
+                      </View>
+                    ))}
+                  </ScrollView>
+
                   <View style={styles.buttonContainer}>
                     <TouchableOpacity
                       style={[styles.button, styles.closeButton]}
@@ -267,33 +303,22 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#333",
-    flex: 1,
-    textAlign: "center",
+  },
+  picker: {
+    marginVertical: 20,
   },
   scrollView: {
-    flexGrow: 1,
+    paddingBottom: 20,
   },
   card: {
-    backgroundColor: "#fff",
-    borderRadius: 10,
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
     padding: 15,
-    marginVertical: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 5,
+    borderRadius: 8,
+    marginBottom: 10,
   },
   cardText: {
     fontSize: 16,
-    fontWeight: "400",
     color: "#333",
-  },
-  picker: {
-    height: 50,
-    width: "100%",
-    marginBottom: 20,
   },
   modalContainer: {
     flex: 1,
@@ -303,14 +328,43 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: "white",
-    borderRadius: 10,
     padding: 20,
+    borderRadius: 8,
     width: "80%",
-    alignItems: "center",
   },
   modalText: {
     fontSize: 16,
-    marginVertical: 5,
+    marginBottom: 10,
+  },
+  outlineItem: {
+    borderWidth: 1,
+    borderColor: "#ddd",
+    padding: 10,
+    marginBottom: 10,
+    borderRadius: 8,
+    backgroundColor: "#fff",
+  },
+  item: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  image: {
+    width: 60,
+    height: 60,
+    borderRadius: 8,
+    marginRight: 10,
+  },
+  rightContent: {
+    flex: 1,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#333",
+  },
+  text: {
+    fontSize: 14,
+    color: "#555",
   },
   buttonContainer: {
     flexDirection: "row",
@@ -319,22 +373,20 @@ const styles = StyleSheet.create({
   },
   button: {
     padding: 10,
-    borderRadius: 5,
-    width: "32%",
+    borderRadius: 8,
   },
   closeButton: {
-    backgroundColor: "silver",
+    backgroundColor: "#999",
   },
   cancelButton: {
-    backgroundColor: "red",
+    backgroundColor: "#f44336",
   },
   acceptButton: {
-    backgroundColor: "green",
+    backgroundColor: "#4CAF50",
   },
   buttonText: {
     color: "white",
-    textAlign: "center",
-    fontSize: 16,
+    fontWeight: "bold",
   },
 });
 

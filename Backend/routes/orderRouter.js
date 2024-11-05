@@ -4,7 +4,6 @@ const Order = require("../models/order");
 const authenticate = require("../loaders/authenticate");
 const cors = require("../loaders/cors");
 const orderRouter = express.Router();
-
 orderRouter.use(bodyParser.json());
 
 orderRouter.get(
@@ -67,6 +66,34 @@ orderRouter.post(
         (err) => next(err)
       )
       .catch((err) => next(err));
+  }
+);
+
+orderRouter.post(
+  "/createOrder",
+  cors.corsWithOptions,
+  authenticate.verifyUser,
+  async (req, res, next) => {
+    try {
+      const newOrder = await Order.create({
+        user: req.user._id,
+        total_price: req.body.amount,
+        total_quantity: req.body.quantity,
+        address: req.body.address, // Use the address from the request body
+        phone: req.body.phone, // Use the phone from the request body
+        order_details: req.body.order_details.map((detail) => ({
+          book: detail.book,
+          order_quantity: detail.order_quantity,
+          order_price: detail.order_price,
+        })),
+      });
+      res.status(200).json(newOrder);
+    } catch (err) {
+      console.error("Error creating order:", err); // Log the error
+      res
+        .status(500)
+        .json({ message: "Internal Server Error", error: err.message });
+    }
   }
 );
 
