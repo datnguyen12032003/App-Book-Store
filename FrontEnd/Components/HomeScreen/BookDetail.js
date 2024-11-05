@@ -109,7 +109,8 @@ function BookDetail({ route, navigation }) {
             e.preventDefault();
             addToCart(book); // Chuyển từ 'books' thành 'item'
           }}
-          title="Add to cart"
+          title={book.quantity === 0 ? "Out of stock" : "Add to cart"}
+          disabled={book.quantity === 0}
         />
       </View>
     </View>
@@ -158,8 +159,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   layoutBtn: {
-    paddingTop: 10
-  }
+    paddingTop: 10,
+  },
 });
 
 export default BookDetail;

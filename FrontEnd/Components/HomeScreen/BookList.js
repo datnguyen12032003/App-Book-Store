@@ -29,9 +29,7 @@ const BookList = () => {
         });
 
         const allBooks = response.data;
-        const filteredBooks = allBooks.filter(
-          (books) => books.status === false
-        );
+        const filteredBooks = allBooks.filter((books) => books.status === true);
         setBooks(filteredBooks);
       } catch (err) {
         setError(err.message);
@@ -91,7 +89,6 @@ const BookList = () => {
       item.imageurls?.find((img) => img.defaultImg)?.imageUrl || // Use default image if available
       item.imageurls?.[0]?.imageUrl || // Fallback to the first image if no default is set
       null;
-
     return (
       <View style={styles.bookItem}>
         <TouchableOpacity
@@ -106,9 +103,27 @@ const BookList = () => {
             )}
           </View>
           <View style={styles.textContainer}>
-            <Text numberOfLines={1} ellipsizeMode="tail" style={styles.bookTitle}>{item.title}</Text>
-            <Text numberOfLines={1} ellipsizeMode="tail" style={styles.hideText}>Author: {item.author}</Text>
-            <Text numberOfLines={1} ellipsizeMode="tail" style={styles.hideText}>Publisher: {item.publisher}</Text>
+            <Text
+              numberOfLines={1}
+              ellipsizeMode="tail"
+              style={styles.bookTitle}
+            >
+              {item.title}
+            </Text>
+            <Text
+              numberOfLines={1}
+              ellipsizeMode="tail"
+              style={styles.hideText}
+            >
+              Author: {item.author}
+            </Text>
+            <Text
+              numberOfLines={1}
+              ellipsizeMode="tail"
+              style={styles.hideText}
+            >
+              Publisher: {item.publisher}
+            </Text>
             <Text>Price: ${item.price}</Text>
             <View style={styles.layoutBtn}>
               <Button
@@ -116,7 +131,8 @@ const BookList = () => {
                   e.preventDefault();
                   addToCart(item); // Chuyển từ 'books' thành 'item'
                 }}
-                title="Add to cart"
+                title={item.quantity === 0 ? "Out of stock" : "Add to cart"}
+                disabled={item.quantity === 0}
               />
             </View>
           </View>
@@ -187,11 +203,11 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   layoutBtn: {
-    width: 105
+    width: 105,
   },
   hideText: {
-    width: 120
-  }
+    width: 120,
+  },
 });
 
 export default BookList;
