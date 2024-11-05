@@ -20,7 +20,7 @@ import BookDetailAdmin from "./Components/HomeAdmin/BookDetailAdmin";
 import BookList from "./Components/HomeScreen/BookList";
 import BookDetail from "./Components/HomeScreen/BookDetail";
 import StatisticAdmin from "./Components/HomeAdmin/StatisticAdmin";
-
+import OrderDetailPage from "./Components/Cart/OrderDetailPage";
 import OrderManagement from "./Components/HomeAdmin/OrderManagements/OrderManagement";
 import HistoryPurchase from "./Components/HomeScreen/Profile/HistoryPurchase";
 import CartPage from "./Components/Cart/CartPage";
@@ -52,7 +52,6 @@ const TabNavigator = () => {
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Cart" component={CartPage} />
       <Tab.Screen name="Profile" component={Profile} />
-
     </Tab.Navigator>
   );
 };
@@ -143,7 +142,11 @@ export default function App() {
           component={StatisticAdmin}
           options={{ title: "Statistic For Admin" }}
         />
-
+        <Stack.Screen
+          name="OrderDetailPage"
+          component={OrderDetailPage}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen
           name="OrderManagement"
           component={OrderManagement}

@@ -21,10 +21,6 @@ var orderSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
-  paymentToken: {
-    type: String,
-    required: true,
-  },
   total_quantity: {
     type: Number,
     required: true,

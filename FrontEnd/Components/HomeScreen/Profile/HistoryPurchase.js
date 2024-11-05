@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Modal,
   ImageBackground,
+  Image,
 } from "react-native";
 import axios from "../../../axiosConfig";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -128,7 +129,7 @@ const HistoryPurchase = () => {
                     Phone: {selectedOrder.phone}
                   </Text>
                   <Text style={styles.modalDetailText}>
-                    Total Price: {selectedOrder.total_price}
+                    Total Price: ${selectedOrder.total_price.toFixed(2)}
                   </Text>
                   <Text style={styles.modalDetailText}>
                     Status: {selectedOrder.order_status}
@@ -137,6 +138,31 @@ const HistoryPurchase = () => {
                     Order Date:{" "}
                     {new Date(selectedOrder.order_date).toLocaleDateString()}
                   </Text>
+
+                  {/* Debugging: Log selectedOrder to check data structure */}
+                  {console.log(selectedOrder)}
+
+                  {/* Render Order Items */}
+                  {selectedOrder.order_details.map((item) => (
+                    <View key={item._id} style={styles.outlineItem}>
+                      <View style={styles.item}>
+                        <Image
+                          source={{
+                            uri:
+                              item.book.imageurls?.find((img) => img.defaultImg)
+                                ?.imageUrl ||
+                              item.book.imageurls?.[0]?.imageUrl ||
+                              null,
+                          }}
+                          style={styles.largeImage} // Use a new style for a larger image
+                          resizeMode="contain" // Ensures the image fits well within the given dimensions
+                        />
+                        <View style={styles.rightContent}>
+                          <Text style={styles.title}>{item.book.title}</Text>
+                        </View>
+                      </View>
+                    </View>
+                  ))}
 
                   <View style={styles.buttonContainer}>
                     <TouchableOpacity
@@ -223,6 +249,39 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginVertical: 5,
     color: "#555",
+  },
+  outlineItem: {
+    backgroundColor: "#f9f9f9",
+    borderRadius: 8,
+    padding: 10,
+    marginVertical: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 3,
+  },
+  item: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  largeImage: {
+    width: 100, // Adjust the width as needed
+    height: 100, // Adjust the height as needed
+    borderRadius: 5,
+    marginRight: 10,
+  },
+  rightContent: {
+    flex: 1,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#333",
+  },
+  text: {
+    fontSize: 14,
+    color: "#666",
   },
   buttonContainer: {
     flexDirection: "row",
