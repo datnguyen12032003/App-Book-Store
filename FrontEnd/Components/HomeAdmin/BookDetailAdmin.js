@@ -72,6 +72,22 @@ function BookDetailAdmin({ route, navigation }) {
       console.error("Error setting default image:", error);
     }
   };
+  //set true false
+  const toggleBookStatus = async () => {
+    const token = await AsyncStorage.getItem("userToken");
+    const newStatus = !book.status; // Đảo ngược trạng thái hiện tại
+    try {
+      const response = await axios.get(
+        `api/books/${bookId}/set?query=${newStatus}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setBook((prevBook) => ({ ...prevBook, status: response.data.status })); // Cập nhật trạng thái mới
+      Alert.alert("Success", `Book status set to ${newStatus ? "true" : "false"}`);
+    } catch (error) {
+      console.error("Error setting book status:", error);
+    }
+  };
+  
 
   const deleteImage = async (imgId) => {
     const token = await AsyncStorage.getItem("userToken");
@@ -163,12 +179,22 @@ function BookDetailAdmin({ route, navigation }) {
         </Text>
       )}
 
+      
+
       <TouchableOpacity
         style={styles.updateButton}
         onPress={() => setModalVisible(true)}
       >
         <Text style={styles.updateButtonText}>Update</Text>
       </TouchableOpacity>
+
+      {/* set true false */}
+      <TouchableOpacity style={styles.statusButton} onPress={toggleBookStatus}>
+  <Text style={styles.statusButtonText}>
+    {book.status ? "Set to Unavailable" : "Set to Available"}
+  </Text>
+</TouchableOpacity>
+
 
       {/* Modal Update */}
       <Modal
@@ -229,6 +255,7 @@ function BookDetailAdmin({ route, navigation }) {
           </View>
         </View>
       </Modal>
+      
     </ScrollView>
   );
 }
@@ -305,6 +332,18 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     paddingLeft: 8,
   },
+  statusButton: {
+    marginTop: 10,
+    padding: 10,
+    backgroundColor: "orange",
+    borderRadius: 5,
+    alignItems: "center",
+  },
+  statusButtonText: {
+    color: "white",
+    fontWeight: "bold",
+  },
+  
 });
 
 export default BookDetailAdmin;

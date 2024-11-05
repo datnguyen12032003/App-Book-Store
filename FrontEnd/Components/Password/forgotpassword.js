@@ -10,13 +10,16 @@ import {
 } from "react-native";
 import axios from "../../axiosConfig";
 import Toast from "react-native-toast-message";
-
+import Ionicons from "react-native-vector-icons/Ionicons";
 const ForgotPassword = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [isOtpSent, setIsOtpSent] = useState(false);
 
+  const handleBackPress = () => {
+    navigation.goBack();
+  };
   const handleForgotPassword = async () => {
     if (!email) {
       Toast.show({
@@ -101,6 +104,9 @@ const ForgotPassword = ({ navigation }) => {
       style={styles.container}
     >
       <StatusBar backgroundColor={"#ffffff"} barStyle="dark-content" />
+      <TouchableOpacity style={styles.backButton} onPress={handleBackPress}>
+        <Ionicons name="arrow-back" size={24} color="black" />
+      </TouchableOpacity>
       <View style={styles.form}>
         <Text style={styles.title}>
           {isOtpSent ? "Reset Password" : "Forgot Password"}
@@ -189,6 +195,13 @@ const styles = StyleSheet.create({
     marginTop: 15,
     textAlign: "center",
     color: "#FF8C00",
+  },
+  backButton: {
+    position: "absolute",
+    top: 12,
+    left: 10,
+    zIndex: 1,
+    padding: 10,
   },
 });
 

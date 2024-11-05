@@ -17,29 +17,37 @@ const BookList = () => {
   const navigation = useNavigation();
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false); // New refreshing state
   const [error, setError] = useState(null);
 
+  const fetchBooks = async () => {
+    setLoading(true);
+    try {
+      const token = await AsyncStorage.getItem("userToken");
+
+      const response = await axios.get("api/books", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const allBooks = response.data;
+      const filteredBooks = allBooks.filter((books) => books.status === true);
+      setBooks(filteredBooks);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+      setRefreshing(false); // Stop the refreshing indicator
+    }
+  };
+
   useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        const token = await AsyncStorage.getItem("userToken");
-
-        const response = await axios.get("api/books", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        const allBooks = response.data;
-        const filteredBooks = allBooks.filter((books) => books.status === true);
-        setBooks(filteredBooks);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchBooks();
   }, []);
+
+  const onRefresh = () => {
+    setRefreshing(true); // Start refreshing indicator
+    fetchBooks(); // Call fetchBooks to reload data
+  };
 
   const addToCart = async (books) => {
     if (books.quantity === 0) {
@@ -53,7 +61,7 @@ const BookList = () => {
         {
           book: books._id,
           price: books.price,
-          quantity: 1, // or any desired initial quantity
+          quantity: 1,
         },
         {
           headers: {
@@ -86,8 +94,8 @@ const BookList = () => {
 
   const renderBookItem = ({ item }) => {
     const imageUrl =
-      item.imageurls?.find((img) => img.defaultImg)?.imageUrl || // Use default image if available
-      item.imageurls?.[0]?.imageUrl || // Fallback to the first image if no default is set
+      item.imageurls?.find((img) => img.defaultImg)?.imageUrl ||
+      item.imageurls?.[0]?.imageUrl ||
       null;
     return (
       <View style={styles.bookItem}>
@@ -110,18 +118,10 @@ const BookList = () => {
             >
               {item.title}
             </Text>
-            <Text
-              numberOfLines={1}
-              ellipsizeMode="tail"
-              style={styles.hideText}
-            >
+            <Text numberOfLines={1} ellipsizeMode="tail" style={styles.hideText}>
               Author: {item.author}
             </Text>
-            <Text
-              numberOfLines={1}
-              ellipsizeMode="tail"
-              style={styles.hideText}
-            >
+            <Text numberOfLines={1} ellipsizeMode="tail" style={styles.hideText}>
               Publisher: {item.publisher}
             </Text>
             <Text>Price: ${item.price}</Text>
@@ -129,7 +129,7 @@ const BookList = () => {
               <Button
                 onPress={(e) => {
                   e.preventDefault();
-                  addToCart(item); // Chuyển từ 'books' thành 'item'
+                  addToCart(item);
                 }}
                 title={item.quantity === 0 ? "Out of stock" : "Add to cart"}
                 disabled={item.quantity === 0}
@@ -150,6 +150,8 @@ const BookList = () => {
           data={books}
           keyExtractor={(item) => item._id.toString()}
           renderItem={renderBookItem}
+          refreshing={refreshing} // Pull-to-refresh state
+          onRefresh={onRefresh} // Pull-to-refresh action
         />
       )}
     </View>
@@ -160,54 +162,87 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    backgroundColor: "#f8f9fa", // Màu nền sáng cho app
   },
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#f8f9fa",
   },
   errorContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    paddingHorizontal: 20,
   },
   bookItem: {
-    marginBottom: 16,
+    flexDirection: "row",
+    alignItems: "center",
     padding: 12,
+    marginBottom: 16,
     borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    backgroundColor: "#fff",
+    borderColor: "#ddd",
+    borderRadius: 10,
+    backgroundColor: "#ffffff",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3, // Hiệu ứng nổi lên cho iOS
   },
   bookImage: {
-    width: 150,
-    height: 150,
+    width: 90,
+    height: 120,
     resizeMode: "cover",
-    marginRight: 10,
     borderRadius: 5,
+    marginRight: 15,
+  },
+  textContainer: {
+    flex: 1,
+    justifyContent: "space-between",
   },
   bookTitle: {
     fontSize: 18,
-    fontWeight: "bold",
-    maxWidth: 110,
-  },
-  textContainer: {
-    gap: 5,
-  },
-  layoutBook: {
-    padding: 10,
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    gap: 20,
-  },
-  layoutBtn: {
-    width: 105,
+    fontWeight: "600",
+    color: "#333",
   },
   hideText: {
-    width: 120,
+    fontSize: 14,
+    color: "#555",
+  },
+  priceText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#007bff",
+    marginTop: 5,
+  },
+  layoutBook: {
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
+  },
+  layoutBtn: {
+    marginTop: 10,
+    alignSelf: "flex-start",
+  },
+  button: {
+    backgroundColor: "#28a745",
+    borderRadius: 5,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: "600",
+    textAlign: "center",
   },
 });
+
 
 export default BookList;

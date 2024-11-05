@@ -158,7 +158,9 @@ const handleLogin = async () => {
             </View>
 
             <View style={styles.group1}>
-              <TouchableOpacity onPress={() => Alert.alert("hello")}>
+            <TouchableOpacity
+                onPress={() => navigation.navigate("ForgotPassword")}
+              >
                 <Text style={styles.forgotPasswordText}>Forgot password</Text>
               </TouchableOpacity>
             </View>

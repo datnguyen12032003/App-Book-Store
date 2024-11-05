@@ -39,6 +39,8 @@ const TabNavigator = () => {
             iconName = focused ? "home" : "home-outline";
           } else if (route.name === "Profile") {
             iconName = focused ? "person" : "person-outline";
+          } else if (route.name === "Cart") {
+            iconName = focused ? "cart" : "cart-outline";
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -48,7 +50,9 @@ const TabNavigator = () => {
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Cart" component={CartPage} />
       <Tab.Screen name="Profile" component={Profile} />
+
     </Tab.Navigator>
   );
 };

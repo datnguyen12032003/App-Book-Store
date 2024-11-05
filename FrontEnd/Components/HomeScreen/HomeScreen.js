@@ -50,7 +50,7 @@ const HomeScreen = () => {
       {/* <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <Text style={styles.logoutText}>Log Out</Text>
       </TouchableOpacity> */}
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={styles.outlineCartBtn}
         onPress={() => navigation.navigate("Cart")}
       >
@@ -58,7 +58,7 @@ const HomeScreen = () => {
           style={styles.cartIcon}
           source={require("../../assets/Images/onboarding/icons8-shopping-cart-96.png")}
         />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };
