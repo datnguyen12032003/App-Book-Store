@@ -11,21 +11,15 @@ import {
 } from "react-native";
 import axios from "../../axiosConfig";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import HomeScreen from "../HomeScreen/HomeScreen";
+import CartPage from "./CartPage";
 
 const OrderDetailPage = ({ route, navigation }) => {
-  const { selectedItems, totalAmount } = route.params;
+  const { selectedItems, totalAmount, cartId } = route.params;
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
 
   const handleConfirmOrder = async () => {
-    if (!phone || !address) {
-      Alert.alert(
-        "Missing Information",
-        "Please enter your phone and address."
-      );
-      return;
-    }
-
     try {
       const token = await AsyncStorage.getItem("userToken");
       const orderData = {
@@ -72,9 +66,45 @@ const OrderDetailPage = ({ route, navigation }) => {
     ]);
   };
 
+  const handleRemoveAfterOrder = async () => {
+    try {
+      const token = await AsyncStorage.getItem("userToken");
+
+      // Assuming each item has a unique ID for deletion
+      for (const item of selectedItems) {
+        await axios.delete(`/api/cart/${cartId}/product/${item.book._id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      }
+    } catch (error) {
+      console.error("Error deleting items after order:", error);
+      Alert.alert(
+        "Delete Failed",
+        "There was an issue removing items after order."
+      );
+    }
+  };
+
+  const handleOrderPlus = () => {
+    if (!phone || !address) {
+      Alert.alert(
+        "Missing Information",
+        "Please enter your phone and address."
+      );
+      return;
+    }
+
+    try {
+      handleConfirmOrder();
+      handleRemoveAfterOrder();
+    } catch (error) {
+      console.error("Error at order button:", error);
+      Alert.alert("Order Failed", "There was an issue at order handle.");
+    }
+  };
+
   return (
     <View style={styles.outlinePage}>
-      <Text style={styles.header}>Order Details</Text>
       <FlatList
         data={selectedItems}
         keyExtractor={(item) => item._id}
@@ -134,7 +164,7 @@ const OrderDetailPage = ({ route, navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.confirmButton}
-          onPress={handleConfirmOrder}
+          onPress={handleOrderPlus}
         >
           <Text style={styles.buttonText}>Confirm</Text>
         </TouchableOpacity>

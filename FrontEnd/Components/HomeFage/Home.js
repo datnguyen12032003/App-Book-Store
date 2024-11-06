@@ -36,7 +36,7 @@ const Home = ({ navigation }) => {
           imageStyle={{ opacity: 0.8 }} // Thêm hiệu ứng mờ cho hình nền
         ></ImageBackground>
 
-        <Text style={{ bottom: 200, fontSize: 40, textAlign: "left" }}>
+        <Text style={{ bottom: 200, fontSize: 40, textAlign: "center" }}>
           <Text style={{ color: "#ffffff" }}>Explore</Text>
           <Text style={{ color: "black" }}> The World Around You Now</Text>
         </Text>

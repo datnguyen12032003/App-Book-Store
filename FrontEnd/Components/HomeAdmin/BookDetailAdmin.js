@@ -145,6 +145,9 @@ function BookDetailAdmin({ route, navigation }) {
       <Text style={styles.title}>{book.title}</Text>
       <Text style={styles.detailText}>Author: {book.author}</Text>
       <Text style={styles.detailText}>Publisher: {book.publisher}</Text>
+      <Text style={styles.detailText}>Genre: {book.genre}</Text>
+      <Text style={styles.detailText}>Quantity: {book.quantity}</Text>
+      <Text style={styles.detailText}>Status: {book.status ? "Available" : "Unavailable"}</Text>
       <Text style={styles.detailText}>Price: ${book.price}</Text>
       <Text style={styles.detailText}>Description: {book.description}</Text>
 
@@ -205,34 +208,22 @@ function BookDetailAdmin({ route, navigation }) {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Update book information</Text>
-            <Text style={styles.modalLabel}>Title:</Text>
+
+          <Text style={styles.modalLabel}>Quantity:</Text>
             <TextInput
               style={styles.modalInput}
-              value={updatedBook.title}
-              onChangeText={(text) =>
-                setUpdatedBook({ ...updatedBook, title: text })
-              }
+              value={updatedBook.quantity.toString()}
+              keyboardType="numeric"
+              onChangeText={(text) => {
+                const quantityValue = text.trim(); // loại bỏ khoảng trắng
+                setUpdatedBook({
+                  ...updatedBook,
+                  quantity: quantityValue ? parseFloat(quantityValue) : 0,
+                }); // Nếu trường rỗng, gán giá trị bằng 0
+              }}
             />
 
-            <Text style={styles.modalLabel}>Author:</Text>
-            <TextInput
-              style={styles.modalInput}
-              value={updatedBook.author}
-              onChangeText={(text) =>
-                setUpdatedBook({ ...updatedBook, author: text })
-              }
-            />
-
-            <Text style={styles.modalLabel}>Publisher:</Text>
-            <TextInput
-              style={styles.modalInput}
-              value={updatedBook.publisher}
-              onChangeText={(text) =>
-                setUpdatedBook({ ...updatedBook, publisher: text })
-              }
-            />
-            <Text style={styles.modalLabel}>Price:</Text>
+<Text style={styles.modalLabel}>Price:</Text>
             <TextInput
               style={styles.modalInput}
               value={updatedBook.price.toString()}
@@ -245,6 +236,15 @@ function BookDetailAdmin({ route, navigation }) {
                 }); // Nếu trường rỗng, gán giá trị bằng 0
               }}
             />
+
+              <Text style={styles.modalLabel}>Description:</Text>
+                          <TextInput
+                            style={styles.modalInput}
+                            value={updatedBook.description}
+                            onChangeText={(text) =>
+                              setUpdatedBook({ ...updatedBook, description: text })
+                            }
+                          />
 
             <Button title="Update" onPress={updateBook} />
             <Button
@@ -263,6 +263,7 @@ function BookDetailAdmin({ route, navigation }) {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
+    paddingTop: 0,
     backgroundColor: "#F5F5F5",
     flex: 1,
   },

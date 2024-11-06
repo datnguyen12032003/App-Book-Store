@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const Order = require("../models/order");
+const Book = require("../models/book");
 const authenticate = require("../loaders/authenticate");
 const cors = require("../loaders/cors");
 const orderRouter = express.Router();
@@ -87,6 +88,12 @@ orderRouter.post(
           order_price: detail.order_price,
         })),
       });
+
+      req.body.order_details.forEach(async (detail) => {
+        await Book.findByIdAndUpdate(detail.book, {
+          $inc: { quantity: -detail.order_quantity },
+        });
+      });
       res.status(200).json(newOrder);
     } catch (err) {
       console.error("Error creating order:", err); // Log the error
@@ -94,6 +101,22 @@ orderRouter.post(
         .status(500)
         .json({ message: "Internal Server Error", error: err.message });
     }
+  }
+);
+
+orderRouter.get(
+  "/totalOrders",
+  cors.cors,
+  authenticate.verifyUser,
+  authenticate.verifyAdmin,
+  (req, res, next) => {
+    Order.countDocuments({ order_status: "Success" }) // Count only orders with status "Success"
+      .then((total) => {
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "application/json");
+        res.json({ total_orders: total });
+      })
+      .catch((err) => next(err));
   }
 );
 

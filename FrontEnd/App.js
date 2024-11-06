@@ -73,7 +73,7 @@ export default function App() {
         <Stack.Screen
           name="Cart"
           component={CartPage}
-          option={{ headerShown: false }}
+          options={{ title: "Cart" }}
         />
         <Stack.Screen
           name="ForgotPassword"
@@ -145,7 +145,7 @@ export default function App() {
         <Stack.Screen
           name="OrderDetailPage"
           component={OrderDetailPage}
-          options={{ headerShown: false }}
+          options={{ title: "Order Details" }}
         />
         <Stack.Screen
           name="OrderManagement"
