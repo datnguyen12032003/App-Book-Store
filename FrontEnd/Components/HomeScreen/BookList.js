@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "../../axiosConfig";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
 const BookList = () => {
   const navigation = useNavigation();
@@ -40,9 +40,11 @@ const BookList = () => {
     }
   };
 
-  useEffect(() => {
-    fetchBooks();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchBooks();
+    }, [])
+  );
 
   const onRefresh = () => {
     setRefreshing(true); // Start refreshing indicator
@@ -162,6 +164,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    width: "100%",
+    height: "100%",
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: "#f8f9fa", // Màu nền sáng cho app
   },
   loadingContainer: {

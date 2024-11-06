@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "../../axiosConfig";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
 const CartPage = () => {
   const [cart, setCart] = useState([]);
@@ -21,25 +21,27 @@ const CartPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchCart = async () => {
-      try {
-        const token = await AsyncStorage.getItem("userToken");
-        const response = await axios.get("api/cart", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setCart(response.data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchCart = async () => {
+    try {
+      const token = await AsyncStorage.getItem("userToken");
+      const response = await axios.get("api/cart", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setCart(response.data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchCart();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchCart();
+    }, [])
+  );
 
   // Hàm xác nhận xóa sách
   const confirmDelete = (cartId, bookId) => {
@@ -132,6 +134,11 @@ const CartPage = () => {
   };
 
   const increaseQuantity = async (cartId, productId) => {
+    if (cart.find((item) => item._id === cartId).quantity === cart.find((item) => item._id === cartId).book.quantity ) {
+      Alert.alert("Quantity cannot be increased anymore!");
+      return;
+    }
+
     try {
       const token = await AsyncStorage.getItem("userToken");
       const response = await axios.put(
@@ -166,6 +173,11 @@ const CartPage = () => {
   };
 
   const decreaseQuantity = async (cartId, productId) => {
+    if (cart.find((item) => item._id === cartId).quantity === 1) {
+      Alert.alert("Quantity cannot be less than 1!");
+      return;
+    }
+
     try {
       const token = await AsyncStorage.getItem("userToken");
       const response = await axios.put(
@@ -312,6 +324,7 @@ const CartPage = () => {
                     navigation.navigate("OrderDetailPage", {
                       selectedItems: selectedItemsList,
                       totalAmount: totalAmount,
+                      cartId: cart._id,
                     });
                   } else {
                     Alert.alert(

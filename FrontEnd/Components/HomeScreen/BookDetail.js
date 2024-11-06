@@ -94,6 +94,8 @@ function BookDetail({ route, navigation }) {
         <Text style={styles.title}>{book.title}</Text>
         <Text style={styles.detailText}>Author: {book.author}</Text>
         <Text style={styles.detailText}>Publisher: {book.publisher}</Text>
+        <Text style={styles.detailText}>Genre: {book.genre}</Text>
+        <Text style={styles.detailText}>Quanitty: {book.quantity}</Text>
         <Text style={styles.detailText}>Price: ${book.price}</Text>
         <Text style={styles.detailText}>Description: {book.description}</Text>
       </View>
